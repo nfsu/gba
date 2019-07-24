@@ -31,7 +31,8 @@ Emulator::Emulator(DebugLevel level, const Buffer &rom):
 	if (rom.size() > romRange.size)
 		oic::System::log()->fatal("Invalid rom size");
 
-	memcpy(biosRange.location, bios.data(), bios.size());	//Place bios at 0
+	memcpy(biosRange.location, bios.data(), bios.size());	//Place bios at 0x00..
+	memcpy(romRange.location, rom.data(), rom.size());		//Place ROM at 0x08..
 
 	if (bios.size() == 0)
 		getRegisters().pc = romRange.start | 1 /* TODO: Temporarily only use ROM in thumb mode */;

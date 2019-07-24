@@ -1,0 +1,3 @@
+[submodule "armulator"]
+	path = armulator
+	url = https://github.com/nfsu/armulator

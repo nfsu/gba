@@ -24,7 +24,7 @@ int main() {
 		mov(r0, 237),		//a = 237
 		cmp(r0, 236),		//; sets flags: 237 and 236; >=, >, !=
 
-		//b(0),				TODO: Add support for branchless and print op
+		//b(0),				TODO: Add support for branchless, print op and test
 
 		and(r0, r5),		//a = 237 & 1 = 1
 		eor(r0, r4),		//a = 1 ^ 14 = 15
@@ -59,8 +59,8 @@ int main() {
 
 	Buffer rom((u8*)instructions, (u8*)instructions + sizeof(instructions));
 
-	gba::Emulator gba = gba::Emulator(arm::Armulator::DebugLevel::MODIFIED, rom);
-	gba.wait();
+	gba::Emulator gba = gba::Emulator(rom);
+	gba.wait();	//31 instructions
 
 	return 0;
 }

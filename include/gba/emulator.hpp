@@ -7,7 +7,7 @@ namespace gba {
 
 	public:
 
-		Emulator(DebugLevel level, const Buffer &rom);
+		Emulator(const Buffer &rom);
 
 	};
 

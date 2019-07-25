@@ -2,7 +2,7 @@
 #include "system/local_file_system.hpp"
 using namespace gba;
 
-Emulator::Emulator(DebugLevel level, const Buffer &rom): 
+Emulator::Emulator(const Buffer &rom): 
 	Armulator(
 	{
 		{ 0x00000000_u32, u32(16_KiB),	arm::AccessFlag::READ_ONLY, "BIOS", "Basic I/O system" },
@@ -15,15 +15,15 @@ Emulator::Emulator(DebugLevel level, const Buffer &rom):
 		{ 0x08000000_u32, u32(32_MiB),	arm::AccessFlag::READ_ONLY, "ROM", "Readonly memory" },
 		{ 0x0E000000_u32, u32(64_KiB),	arm::AccessFlag::READ_WRITE, "SRAM", "Save memory" }
 
-	}, level, 0) {
+	}, 0) {
 
 	Buffer bios;
 
 	if(!oic::System::files()->read(oic::System::files()->get("./gba_bios.bin"), bios))
 		oic::System::log()->fatal("Please download the gba bios");
 
-	const arm::Memory32::Range	&biosRange = getMemory().getRange("BIOS"),
-								&romRange = getMemory().getRange("ROM");
+	const arm::Memory32::Range	&biosRange = memory.getRange("BIOS"),
+								&romRange = memory.getRange("ROM");
 
 	if (bios.size() > biosRange.size)
 		oic::System::log()->fatal("Invalid bios");
@@ -34,7 +34,10 @@ Emulator::Emulator(DebugLevel level, const Buffer &rom):
 	memcpy(biosRange.location, bios.data(), bios.size());	//Place bios at 0x00..
 	memcpy(romRange.location, rom.data(), rom.size());		//Place ROM at 0x08..
 
-	if (bios.size() == 0)
-		getRegisters().pc = romRange.start | 1 /* TODO: Temporarily only use ROM in thumb mode */;
+	/* TODO: Temporarily only use ROM in thumb mode */
+	if (bios.size() == 0) {
+		r.pc = romRange.start;
+		r.cpsr.thumb(true);
+	}
 
 }

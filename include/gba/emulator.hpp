@@ -8,6 +8,7 @@ namespace gba {
 	public:
 
 		Emulator(const Buffer &rom);
+		~Emulator() = default;
 
 	};
 

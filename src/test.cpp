@@ -59,8 +59,21 @@ int main() {
 
 	Buffer rom((u8*)instructions, (u8*)instructions + sizeof(instructions));
 
-	gba::Emulator gba = gba::Emulator(rom);
-	gba.wait();	//31 instructions
+	usz tests = 0;
+
+	retry:
+
+	try {
+
+		gba::Emulator gba = gba::Emulator(rom);
+		gba.wait();	//31 instructions
+
+	} catch (std::exception e) {
+		++tests;
+
+		if(tests != 64)
+			goto retry;
+	}
 
 	return 0;
 }

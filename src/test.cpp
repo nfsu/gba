@@ -45,8 +45,8 @@ int main() {
 		ror(r6, r1),		//^
 		b(PL, 4),			//if r6 > 0 ? jump 4 bytes
 
-		ldrPc(r4, 8),		//e = 0xDEADBEEF
-		ldrPc(r5, 4),		//f = 0xDEADBEEF
+		ldrPc(r4, 4),		//e = 0xDEADBEEF
+		ldrPc(r5, 6),		//f = 0xDEADBEEF
 		cmp(r4, r5),		//Test e == f
 		b(EQ, 16),			//; Jumps to beyond the dead beefs if equal
 
@@ -59,21 +59,8 @@ int main() {
 
 	Buffer rom((u8*)instructions, (u8*)instructions + sizeof(instructions));
 
-	usz tests = 0;
-
-	retry:
-
-	try {
-
-		gba::Emulator gba = gba::Emulator(rom);
-		gba.wait();	//31 instructions
-
-	} catch (std::exception e) {
-		++tests;
-
-		if(tests != 64)
-			goto retry;
-	}
+	gba::Emulator gba = gba::Emulator(rom);
+	gba.wait();	//31 instructions
 
 	return 0;
 }

@@ -24,7 +24,7 @@ int main() {
 		mov(r0, 237),		//a = 237
 		cmp(r0, 236),		//; sets flags: 237 and 236; >=, >, !=
 
-		//b(0),				TODO: Add support for branchless, print op and test
+		//b(-2),			//Goto and operation
 
 		and(r0, r5),		//a = 237 & 1 = 1
 		eor(r0, r4),		//a = 1 ^ 14 = 15
@@ -43,7 +43,18 @@ int main() {
 		ror(r6, r1),		//Shift 3 bits right and take 3 bits from back at front
 		ror(r6, r1),		//^
 		ror(r6, r1),		//^
-		b(PL, 4),			//if r6 > 0 ? jump 4 bytes
+		b(PL, 2),			//if r6 > 0 ? jump 2 bytes; to DEAD C0DE
+
+		bll(4),				//Jump over DEAD C0DE
+		blh(4),
+
+		0xDEAD, 0xC0DE,
+
+		mov(r0, 1),			//Set to 1
+		b(EQ, 69),			//Jump that won't be executed
+		b(NE, -2),			//Jump that will be executed
+
+		mov(r0, 33),		//Set to 33
 
 		ldrPc(r4, 4),		//e = 0xDEADBEEF
 		ldrPc(r5, 6),		//f = 0xDEADBEEF
@@ -53,7 +64,7 @@ int main() {
 		0xDEAD, 0xBEEF, 0xDEAD, 0xBEEF,
 		0xDEAD, 0xBEEF, 0xDEAD, 0xBEEF
 
-		//TODO: Write this for every instruction (except main memory access)
+		//TODO: BX, LDR/STR
 
 	};
 

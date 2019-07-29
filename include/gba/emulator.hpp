@@ -10,6 +10,10 @@ namespace gba {
 		Emulator(const Buffer &rom);
 		~Emulator() = default;
 
+		inline void wait() {
+			Armulator::wait(ARM7TDMI);
+		}
+
 	};
 
 }

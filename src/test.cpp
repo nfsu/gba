@@ -56,14 +56,24 @@ int main() {
 
 		mov(r0, 33),		//Set to 33
 
+		addPc(r0, 8),		//Get pc at ldrPc(r5, 6) instruction
+		addSp(r1, 4),		//Get sp+2
+
+		addSp(8),			//Add 5 to sp
+		addSp(-8),			//Remove sp again
+
+		addSp(r1, 4),		//Get sp again
+
 		ldrPc(r4, 4),		//e = 0xDEADBEEF
-		ldrPc(r5, 6),		//f = 0xDEADBEEF
+		ldrPc(r5, 8),		//f = 0xBEEFDEAD
 		cmp(r4, r5),		//Test e == f
-		b(EQ, 16),			//; Jumps to beyond the dead beefs if equal
+		b(EQ, 0),			//Jumps into the dead beefs if equal
+		b(NE, 16),			//Jumps to beyond the dead beefs if nequal
 
 		0xDEAD, 0xBEEF, 0xDEAD, 0xBEEF,
-		0xDEAD, 0xBEEF, 0xDEAD, 0xBEEF
+		0xDEAD, 0xBEEF, 0xDEAD, 0xBEEF,
 
+		mov(r2, 123)
 		//TODO: BX, LDR/STR
 
 	};

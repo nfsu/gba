@@ -80,13 +80,31 @@ int main() {
 
 	Buffer rom((u8*)instructions, (u8*)instructions + sizeof(instructions));
 
+	gba::Emulator gba = gba::Emulator({}, rom);
 
 	usz count{};
 	while (++count < 64) {
 
 		try {
-			gba::Emulator gba = gba::Emulator({}, rom);
-			gba.wait();	//31 instructions
+
+			//Reset GBA
+			gba.r = {};
+			gba.r.cpsr.mode(arm::Mode::E::USR);
+			gba.r.pc = 0;
+			gba.r.pc = gba.memory.getRanges()[7 /* ROM */].start;
+			gba.r.cpsr.thumb(true);
+
+			//Prepare cache
+
+			usz val = 1;
+
+			for (usz i = 0; i < 16; ++i)
+				val ^= gba.memory.get<u16>(gba.r.pc + u32(i) * 2);
+
+			printf("%zu\t", val);
+
+			//Run gba
+			gba.wait();
 
 		} catch (std::exception) {}
 

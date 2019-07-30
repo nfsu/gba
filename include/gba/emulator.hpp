@@ -7,7 +7,7 @@ namespace gba {
 
 	public:
 
-		Emulator(const Buffer &rom);
+		Emulator(const Buffer &bios, const Buffer &rom);
 		~Emulator() = default;
 
 		inline void wait() {

@@ -48,7 +48,7 @@ int main() {
 		bll(4),				//Jump over DEAD C0DE
 		blh(4),
 
-		0xDEAD, 0xC0DE,
+		0xC0DE, 0xDEAD,
 
 		mov(r0, 1),			//Set to 1
 		b(EQ, 69),			//Jump that won't be executed
@@ -64,17 +64,21 @@ int main() {
 
 		addSp(r1, 4),		//Get sp again
 
-		ldrPc(r4, 4),		//e = 0xDEADBEEF
-		ldrPc(r5, 8),		//f = 0xBEEFDEAD
+		ldrPc(r4, 4),		//e = 0x42AC4D01
+		ldrPc(r5, 4),		//f = 0xC0DEDEAD
 		cmp(r4, r5),		//Test e == f
 		b(EQ, 0),			//Jumps into the dead beefs if equal
-		b(NE, 16),			//Jumps to beyond the dead beefs if nequal
+		b(NE, 6),			//Jumps to beyond the dead beefs if nequal
 
-		0xDEAD, 0xBEEF, 0xDEAD, 0xBEEF,
-		0xDEAD, 0xBEEF, 0xDEAD, 0xBEEF,
+		0xC0DE, 0xDEAD,
+		0xC0DE, 0xDEAD,
 
-		mov(r2, 123)
+		mov(r2, 123),
+		mov(r0, 23),
+
 		//TODO: BX, LDR/STR
+		0xC0DE,
+		0xDEAD
 
 	};
 

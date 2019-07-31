@@ -98,15 +98,6 @@ int main() {
 			gba.r.pc = gba.memory.getRanges()[7 /* ROM */].start;
 			gba.r.cpsr.thumb(true);
 
-			//Prepare cache
-
-			usz val = 1;
-
-			for (usz i = 0; i < 16; ++i)
-				val ^= gba.memory.get<u16>(gba.r.pc + u32(i) * 2);
-
-			printf("%zu\t", val);
-
 			//Run gba
 			gba.wait();
 

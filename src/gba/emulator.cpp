@@ -12,7 +12,7 @@ Emulator::Emulator(const Buffer &bios, const Buffer &rom):
 		{ 0x05000000_u32, u32(1_KiB),	true, "BG/OBJ RAM", "Palette memory", {} },
 		{ 0x06000000_u32, u32(96_KiB),	true, "VRAM", "Video memory", {} },
 		{ 0x07000000_u32, u32(1_KiB),	true, "OAM", "OBJ attributes", {} },
-		{ 0x08000000_u32, u32(32_MiB),	false, "ROM", "Readonly memory", rom },
+		{ 0x08000000_u32, u32(rom.size()),	false, "ROM", "Readonly memory", rom },
 		{ 0x0E000000_u32, u32(64_KiB),	true, "SRAM", "Save memory", {} }
 
 	}, 0) {

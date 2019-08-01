@@ -51,7 +51,7 @@ int main() {
 		0xC0DE, 0xDEAD,
 
 		mov(r0, 1),			//Set to 1
-		b(EQ, 69),			//Jump that won't be executed
+		b(EQ, 68),			//Jump that won't be executed
 		b(NE, -2),			//Jump that will be executed
 
 		mov(r0, 33),		//Set to 33
@@ -76,6 +76,8 @@ int main() {
 		mov(r2, 123),
 		mov(r0, 23),
 
+		nop(),
+
 		//TODO: BX, LDR/STR
 		0xC0DE,
 		0xDEAD
@@ -85,6 +87,7 @@ int main() {
 	Buffer rom((u8*)instructions, (u8*)instructions + sizeof(instructions));
 
 	gba::Emulator gba = gba::Emulator({}, rom);
+	rom.clear();
 
 	usz count{};
 	while (++count < 64) {

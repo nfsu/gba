@@ -48,7 +48,7 @@ int main() {
 		bll(4),				//Jump over DEAD C0DE
 		blh(4),
 
-		0xC0DE, 0xDEAD,
+		0x0000, 0x0000,
 
 		mov(r0, 1),			//Set to 1
 		b(EQ, 68),			//Jump that won't be executed
@@ -70,23 +70,24 @@ int main() {
 		b(EQ, 0),			//Jumps into the dead beefs if equal
 		b(NE, 6),			//Jumps to beyond the dead beefs if nequal
 
-		0xC0DE, 0xDEAD,
-		0xC0DE, 0xDEAD,
+		0x0000, 0x0000,
+		0x0000, 0x0000,
 
 		mov(r2, 123),
 		mov(r0, 23),
 
 		nop(),
+		bkpt(0xCC),
 
 		//TODO: BX, LDR/STR
-		0xC0DE,
-		0xDEAD
+		0x0000,
+		0x0000
 
 	};
 
 	Buffer rom((u8*)instructions, (u8*)instructions + sizeof(instructions));
 
-	gba::Emulator gba = gba::Emulator({}, rom);
+	gba::Emulator gba = gba::Emulator({}, rom, {});
 	rom.clear();
 
 	usz count{};
@@ -97,7 +98,6 @@ int main() {
 			//Reset GBA
 			gba.r = {};
 			gba.r.cpsr.mode(arm::Mode::E::USR);
-			gba.r.pc = 0;
 			gba.r.pc = gba.memory.getRanges()[7 /* ROM */].start;
 			gba.r.cpsr.thumb(true);
 

@@ -1,6 +1,7 @@
 #include "gba/emulator.hpp"
 #include "arm/thumb/instructions.hpp"
 using namespace arm::thumb;
+using namespace arm::cond;
 
 int main() {
 
@@ -14,6 +15,10 @@ int main() {
 		asr(r4, r1, 1),		//e = 9 ASR 1 = 4
 		mov(r5, 1),			//f = 1
 
+		lsl(r7, r5, 31),	//0x80000000; -min
+		sub(r7, 1),			//0x7FFFFFFF; +max; overflow
+		add(r7, 1),			//0x80000000; -min; overflow
+
 		add(r4, r3, r2),	//e = 20 + 1 = 21
 		sub(r4, r4, r0),	//e = 21 - 5 = 16
 		sub(r4, r4, 2),		//e = 16 - 2 = 14
@@ -22,7 +27,7 @@ int main() {
 		asr(r3, r5),		//f = -3 ASR 1 = -2
 
 		mov(r0, 237),		//a = 237
-		cmp(r0, 236),		//; sets flags: 237 and 236; >=, >, !=
+		cmp(r0, 238),		//; sets flags: 237 and 236; <=, <, !=
 
 		//b(-2),			//Goto and operation
 
@@ -64,8 +69,8 @@ int main() {
 
 		addSp(r1, 4),		//Get sp again
 
-		ldrPc(r4, 4),		//e = 0x42AC4D01
-		ldrPc(r5, 4),		//f = 0xC0DEDEAD
+		ldrPc(r4, 4),		//e = 0x0000D103
+		ldrPc(r5, 8),		//f = 0x00000000
 		cmp(r4, r5),		//Test e == f
 		b(EQ, 0),			//Jumps into the dead beefs if equal
 		b(NE, 6),			//Jumps to beyond the dead beefs if nequal
@@ -79,7 +84,7 @@ int main() {
 		nop(),
 		bkpt(0xCC),
 
-		//TODO: BX, LDR/STR
+		//TODO: All instructions: BX, LDR/STR
 		0x0000,
 		0x0000
 
@@ -90,23 +95,18 @@ int main() {
 	gba::Emulator gba = gba::Emulator({}, rom, {});
 	rom.clear();
 
-	usz count{};
-	while (++count < 64) {
+	//Setup to skip bios (we don't have one yet)
 
-		try {
+	gba.r = {};
+	gba.r.cpsr.mode(arm::Mode::E::USR);
+	gba.r.pc = gba.memory.getRanges()[7 /* ROM */].start;
+	gba.r.cpsr.thumb(true);
 
-			//Reset GBA
-			gba.r = {};
-			gba.r.cpsr.mode(arm::Mode::E::USR);
-			gba.r.pc = gba.memory.getRanges()[7 /* ROM */].start;
-			gba.r.cpsr.thumb(true);
-
-			//Run gba
-			gba.wait();
-
-		} catch (std::exception) {}
-
-	}
+	//Run gba
+	gba.wait<arm::Armulator::DebugType(
+		arm::Armulator::PRINT_INSTRUCTION |
+		arm::Armulator::PRINT_REGISTERS
+	)>();
 
 	return 0;
 }

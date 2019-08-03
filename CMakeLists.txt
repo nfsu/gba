@@ -27,7 +27,7 @@ add_executable(
 	${gbaSrc}
 )
 
-target_link_libraries(gba armulator ocore)
+target_link_libraries(gba ocore)
 
 if(MSVC)
     target_compile_options(gba PRIVATE /W4 /WX /MD /MP /wd4201)

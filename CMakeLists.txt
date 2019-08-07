@@ -15,7 +15,8 @@ add_subdirectory(armulator)
 
 include_directories(include)
 include_directories(armulator/include)
-include_directories(armulator/core2/include)
+include_directories(armulator/emu/include)
+include_directories(armulator/emu/core2/include)
 
 file(GLOB_RECURSE gbaSrc
 	"include/*.hpp"
